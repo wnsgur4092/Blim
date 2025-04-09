@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 @main
 struct BlimApp: App {
@@ -6,5 +7,6 @@ struct BlimApp: App {
         WindowGroup {
             MainView()
         }
+        .modelContainer(for: [Challenge.self, Task.self])
     }
 }

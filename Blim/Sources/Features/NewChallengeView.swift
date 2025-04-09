@@ -6,45 +6,38 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct NewChallengeView: View {
-    @State var challenge: String = ""
-    @State var startDate: Date = Date()
-    @State var endDate : Date = Date()
-    
+    @ObservedObject var viewModel: NewChallengeViewModel
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
+
     var body: some View {
-        VStack{
-            GroupBox{
-                TextField("예: 영어공부하기!", text: $challenge)
+        VStack(spacing: 16) {
+            GroupBox {
+                TextField("예: 영어 공부하기", text: $viewModel.title)
                     .textFieldStyle(.roundedBorder)
-                
-                DatePicker("시작", selection: $startDate, displayedComponents: [.date])
-                    .datePickerStyle(.compact)
-                
-                DatePicker("종료", selection: $endDate, displayedComponents: [.date])
-                    .datePickerStyle(.compact)
-                
+
+                DatePicker("시작일", selection: $viewModel.startDate, displayedComponents: [.date])
+                DatePicker("종료일", selection: $viewModel.endDate, displayedComponents: [.date])
             } label: {
-                Label("새로운 챌린지", systemImage: "figure.run")
+                Label("새로운 챌린지", systemImage: "flag")
                     .foregroundStyle(.pink)
             }
-            
-            HStack{
-                Button {
-                    print("챌린지 시작 버튼 클릭")
-                } label: {
-                    Text("챌린지 시작")
-                        .frame(maxWidth: .infinity)
+
+            Button("챌린지 시작") {
+                viewModel.createChallenge(context: context) {
+                    dismiss()
                 }
-                .buttonStyle(.borderedProminent)
             }
-            
-            
+            .disabled(viewModel.title.isEmpty)
+            .buttonStyle(.borderedProminent)
         }
         .padding()
     }
 }
 
 #Preview {
-    NewChallengeView()
+    NewChallengeView(viewModel: NewChallengeViewModel())
 }
