@@ -9,23 +9,23 @@ import Foundation
 import SwiftData
 
 final class MainViewModel: ObservableObject {
-    @Published var selectedChallenge: Challenge?
-    @Published var isChallengeActive: Bool = false
+    @Published var activeChallenge: Challenge? = nil
+    @Published var hasNoChallenge: Bool = true
 
-    func updateChallengeStatus(challenges: [Challenge], context: ModelContext) {
-        if let challenge = challenges.first {
-            selectedChallenge = challenge
+    func syncChallengeState(from challenges: [Challenge], context: ModelContext) {
+        // 진행 가능한 챌린지만 남기고 나머지 삭제
+        var hasValid = false
 
-            // 종료일 경과 시 자동 완료 처리
-            if !challenge.isDone && challenge.endDate < Date() {
-                challenge.isDone = true
-                try? context.save()
+        for challenge in challenges {
+            if challenge.endDate < Date() {
+                context.delete(challenge)
+            } else {
+                activeChallenge = challenge
+                hasValid = true
             }
-
-            isChallengeActive = !challenge.isDone
-        } else {
-            selectedChallenge = nil
-            isChallengeActive = false
         }
+
+        try? context.save()
+        hasNoChallenge = !hasValid
     }
 }

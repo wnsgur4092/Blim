@@ -9,20 +9,20 @@ import Foundation
 import SwiftData
 
 @Model
-class Challenge{
-    var id : UUID
-    var title : String
-    var startDate : Date
-    var endDate : Date
-    var isDone : Bool
-    @Relationship(deleteRule: .cascade)
-    var tasks: [Task] = []
-    
-    init(title: String, startDate: Date, endDate: Date, isDone : Bool = false){
+class Challenge {
+    var id: UUID
+    var title: String
+    var startDate: Date
+    var endDate: Date
+
+    init(title: String, startDate: Date, endDate: Date) {
         self.id = UUID()
         self.title = title
         self.startDate = startDate
         self.endDate = endDate
-        self.isDone = isDone
+    }
+
+    var isExpired: Bool {
+        endDate < Date()
     }
 }

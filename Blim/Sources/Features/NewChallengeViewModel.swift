@@ -25,7 +25,6 @@ final class NewChallengeViewModel: ObservableObject {
         print("✅ 새로운 챌린지 생성됨:")
         print("📌 제목: \(challenge.title)")
         print("📆 기간: \(challenge.startDate.formatted()) ~ \(challenge.endDate.formatted())")
-        print("📍 완료 여부: \(challenge.isDone)")
         print("🆔 ID: \(challenge.id)")
 
         onSuccess()
