@@ -21,11 +21,23 @@ struct MainView: View {
             .onAppear {
                 viewModel.syncChallengeState(from: challenges, context: context)
             }
+            .onChange(of: challenges) { newChallenges in
+                viewModel.syncChallengeState(from: newChallenges, context: context)
+            }
+            
             .sheet(isPresented: $showSheet) {
                 let newVM = NewChallengeViewModel()
                 NewChallengeView(viewModel: newVM)
                     .presentationDetents([.medium, .large])
             }
+            .alert("🎉 챌린지 완료!", isPresented: $viewModel.shouldShowCompletionPopup) {
+                Button("새로운 챌린지 시작하기") {
+                    showSheet = true
+                }
+            } message: {
+                Text("정말 멋져요! 챌린지를 끝냈어요.\n새로운 도전을 시작해볼까요?")
+            }
+
         }
     }
 

@@ -11,13 +11,15 @@ import SwiftData
 final class MainViewModel: ObservableObject {
     @Published var activeChallenge: Challenge? = nil
     @Published var hasNoChallenge: Bool = true
+    @Published var shouldShowCompletionPopup: Bool = false
 
     func syncChallengeState(from challenges: [Challenge], context: ModelContext) {
-        // 진행 가능한 챌린지만 남기고 나머지 삭제
         var hasValid = false
 
         for challenge in challenges {
             if challenge.endDate < Date() {
+                // ✅ 챌린지 종료 감지
+                shouldShowCompletionPopup = true
                 context.delete(challenge)
             } else {
                 activeChallenge = challenge
