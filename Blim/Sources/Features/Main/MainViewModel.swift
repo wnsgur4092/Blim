@@ -30,4 +30,12 @@ final class MainViewModel: ObservableObject {
         try? context.save()
         hasNoChallenge = !hasValid
     }
+    
+    func deleteChallenge(_ challenge: Challenge, context: ModelContext) {
+        context.delete(challenge)
+        try? context.save()
+        activeChallenge = nil
+        hasNoChallenge = true
+    }
+
 }
